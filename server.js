@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const db = require("./db/db.json")
+
 // Sets up the Express App
 // =============================================================
 const app = express();
@@ -35,10 +36,11 @@ app.post("/api/notes", function(req, res) {
     res.json(req.body);
 });
 
+// Takes the key value of the note clicked on and sends a delete query, iterating over the db items until it finds the db item that has the value sent and deletes it.
 app.delete("/api/notes/:id", function(req, res) {
-    var chosen = parseInt(req.params.id);
+    let deleteId = parseInt(req.params.id);
     for (var i = 0; i < db.length; i++) {
-        if (chosen === db[i].id) {
+        if (deleteId === db[i].id) {
             db.splice(i, 1);
             fs.writeFileSync("./db/db.json", JSON.stringify(db));
             return res.status(200).end();
@@ -46,7 +48,7 @@ app.delete("/api/notes/:id", function(req, res) {
     }
 });
 
-
+// Assigns key value to an existing array
 function assignKeyValueTo(objArray){
     for (let i = 0; i < objArray.length; i++) {
         objArray[i]["id"] = i+1;
